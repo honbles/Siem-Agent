@@ -1,4 +1,4 @@
-# OpenSIEM Agent
+# Siem-Agent Agent
 
 A lightweight, open-source Windows security event collection agent written in Go. It collects security telemetry from Windows hosts and forwards it to a centralized backend for storage and analysis.
 
@@ -26,7 +26,7 @@ A lightweight, open-source Windows security event collection agent written in Go
 
 ## Overview
 
-The OpenSIEM agent runs as a Windows Service on each host you want to monitor. It collects events from five sources, normalizes them into a common schema, and forwards them over HTTPS to the backend ingest API in batches.
+The Siem-Agent agent runs as a Windows Service on each host you want to monitor. It collects events from five sources, normalizes them into a common schema, and forwards them over HTTPS to the backend ingest API in batches.
 
 **Key properties:**
 
@@ -100,8 +100,8 @@ The disk queue decouples collection from delivery — if the backend goes offlin
 ### Quick build (from Windows)
 
 ```powershell
-git clone https://github.com/YOUR_ORG/opensiem.git
-cd opensiem/agent
+git clone https://github.com/honbles/Seim-Agent.git
+cd Siem-Agent/agent
 go mod tidy
 go build -o agent.exe ./cmd/agent
 ```
@@ -109,8 +109,8 @@ go build -o agent.exe ./cmd/agent
 ### Cross-compile from Linux or macOS
 
 ```bash
-git clone https://github.com/YOUR_ORG/opensiem.git
-cd opensiem/agent
+git clone https://github.com/honbles/Siem-Agent.git
+cd Siem-Agent/agent
 go mod tidy
 GOOS=windows GOARCH=amd64 go build -o agent.exe ./cmd/agent
 ```
@@ -154,7 +154,7 @@ Copy `agent.exe` and `install.ps1` to the target host, then run from an elevated
 ```
 
 The installer will:
-1. Create `C:\Program Files\OpenSIEM\Agent\` and `C:\ProgramData\OpenSIEM\`
+1. Create `C:\Program Files\Siem-Agent\Agent\` and `C:\ProgramData\Siem-Agent\`
 2. Copy `agent.exe` to the install directory
 3. Write `agent.yaml` with your backend URL
 4. Register the service with the Windows SCM (auto-start on boot)
@@ -165,18 +165,18 @@ The installer will:
 
 ```powershell
 # 1. Copy files
-New-Item -ItemType Directory -Path "C:\Program Files\OpenSIEM\Agent"
-Copy-Item agent.exe "C:\Program Files\OpenSIEM\Agent\"
-Copy-Item configs\agent.yaml "C:\Program Files\OpenSIEM\Agent\"
+New-Item -ItemType Directory -Path "C:\Program Files\Siem-Agent\Agent"
+Copy-Item agent.exe "C:\Program Files\Siem-Agent\Agent\"
+Copy-Item configs\agent.yaml "C:\Program Files\Siem-Agent\Agent\"
 
 # 2. Create data directory
-New-Item -ItemType Directory -Path "C:\ProgramData\OpenSIEM"
+New-Item -ItemType Directory -Path "C:\ProgramData\Siem-Agent"
 
 # 3. Edit agent.yaml — set backend_url at minimum (see Configuration section)
 
 # 4. Register and start service (run as Administrator)
-& "C:\Program Files\OpenSIEM\Agent\agent.exe" -config "C:\Program Files\OpenSIEM\Agent\agent.yaml" install
-Start-Service OpenSIEMAgent
+& "C:\Program Files\Siem-Agent\Agent\agent.exe" -config "C:\Program Files\Siem-Agent\Agent\agent.yaml" install
+Start-Service Siem-AgentAgent
 ```
 
 ---
@@ -254,7 +254,7 @@ forwarder:
 queue:
   # Directory where the offline event buffer is stored.
   # The agent creates a segments/ subfolder here automatically.
-  db_path: "C:\\ProgramData\\OpenSIEM\\queue"
+  db_path: "C:\\ProgramData\\Siem-Agent\\queue"
   # Maximum number of buffered events before oldest are evicted.
   max_rows: 100000
 
@@ -294,7 +294,7 @@ forwarder:
   api_key: "your-secret-key-here"
 
 queue:
-  db_path: "C:\\ProgramData\\OpenSIEM\\queue"
+  db_path: "C:\\ProgramData\\Siem-Agent\\queue"
   max_rows: 100000
 
 log:
@@ -323,7 +323,7 @@ openssl genrsa -out ca.key 4096
 
 # Generate self-signed CA certificate (valid 10 years)
 openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
-  -subj "/C=US/O=OpenSIEM/CN=OpenSIEM-CA"
+  -subj "/C=US/O=Siem-Agent/CN=Siem-Agent-CA"
 ```
 
 Keep `ca.key` private and secure. `ca.crt` is distributed to all agents.
@@ -336,7 +336,7 @@ openssl genrsa -out server.key 2048
 
 # Generate CSR
 openssl req -new -key server.key -out server.csr \
-  -subj "/C=US/O=OpenSIEM/CN=siem.yourcompany.com"
+  -subj "/C=US/O=Siem-Agent/CN=siem.yourcompany.com"
 
 # Sign with your CA — include the backend's hostname/IP in the SAN
 cat > server-ext.cnf << EOF
@@ -364,7 +364,7 @@ HOSTNAME="workstation-01"
 openssl genrsa -out ${HOSTNAME}.key 2048
 
 openssl req -new -key ${HOSTNAME}.key -out ${HOSTNAME}.csr \
-  -subj "/C=US/O=OpenSIEM/CN=${HOSTNAME}"
+  -subj "/C=US/O=Siem-Agent/CN=${HOSTNAME}"
 
 openssl x509 -req -days 825 -in ${HOSTNAME}.csr \
   -CA ca.crt -CAkey ca.key -CAcreateserial \
@@ -373,7 +373,7 @@ openssl x509 -req -days 825 -in ${HOSTNAME}.csr \
 
 #### Step 4 — Deploy certs to the agent host
 
-Copy these three files to `C:\Program Files\OpenSIEM\Agent\certs\` on the Windows host:
+Copy these three files to `C:\Program Files\Siem-Agent\Agent\certs\` on the Windows host:
 
 | File | What it is |
 |---|---|
@@ -394,9 +394,9 @@ forwarder:
 Paths are relative to the location of `agent.yaml`. You can also use absolute paths:
 
 ```yaml
-  cert_file: "C:\\Program Files\\OpenSIEM\\Agent\\certs\\agent.crt"
-  key_file:  "C:\\Program Files\\OpenSIEM\\Agent\\certs\\agent.key"
-  ca_file:   "C:\\Program Files\\OpenSIEM\\Agent\\certs\\ca.crt"
+  cert_file: "C:\\Program Files\\Siem-Agent\\Agent\\certs\\agent.crt"
+  key_file:  "C:\\Program Files\\Siem-Agent\\Agent\\certs\\agent.key"
+  ca_file:   "C:\\Program Files\\Siem-Agent\\Agent\\certs\\ca.crt"
 ```
 
 ---
@@ -456,15 +456,15 @@ After installation the service runs automatically. To manage it:
 
 ```powershell
 # Check status
-Get-Service OpenSIEMAgent
+Get-Service Siem-AgentAgent
 
 # Start / stop / restart
-Start-Service OpenSIEMAgent
-Stop-Service OpenSIEMAgent
-Restart-Service OpenSIEMAgent
+Start-Service Siem-AgentAgent
+Stop-Service Siem-AgentAgent
+Restart-Service Siem-AgentAgent
 
 # View recent logs (Windows Event Log)
-Get-EventLog -LogName Application -Source OpenSIEMAgent -Newest 50
+Get-EventLog -LogName Application -Source Siem-AgentAgent -Newest 50
 ```
 
 ### Interactively (for testing and debugging)
@@ -484,7 +484,7 @@ Run directly in a PowerShell terminal — logs print to stdout. Press `Ctrl+C` t
 
 ```powershell
 # Install service (must be run as Administrator)
-.\agent.exe -config "C:\Program Files\OpenSIEM\Agent\agent.yaml" install
+.\agent.exe -config "C:\Program Files\Siem-Agent\Agent\agent.yaml" install
 
 # Remove service
 .\agent.exe uninstall
@@ -522,10 +522,10 @@ The queue files are plain text and human-readable:
 
 ```powershell
 # See how many segment files exist
-Get-ChildItem "C:\ProgramData\OpenSIEM\queue\segments\"
+Get-ChildItem "C:\ProgramData\Siem-Agent\queue\segments\"
 
 # Read a segment (each line is one JSON event)
-Get-Content "C:\ProgramData\OpenSIEM\queue\segments\0000000001.jsonl" | 
+Get-Content "C:\ProgramData\Siem-Agent\queue\segments\0000000001.jsonl" | 
   ConvertFrom-Json | Select-Object time, event_type, host | Format-Table
 ```
 
@@ -627,8 +627,8 @@ Contributions are welcome! Please open an issue before submitting a large PR so 
 **Development setup:**
 
 ```bash
-git clone https://github.com/YOUR_ORG/opensiem.git
-cd opensiem/agent
+git clone https://github.com/honbles/Siem-Agent.git
+cd Siem-Agent/agent
 go mod tidy
 
 # Run tests
