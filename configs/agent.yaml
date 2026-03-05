@@ -1,0 +1,64 @@
+agent:
+  # Unique agent identifier. Leave empty to use the machine hostname.
+  id: ""
+  version: "0.1.0"
+
+collector:
+  event_log:
+    enabled: true
+    # Windows Event Log channels to subscribe to.
+    channels:
+      - Security
+      - System
+      - Application
+      - Microsoft-Windows-PowerShell/Operational
+    poll_interval: 5s
+
+  sysmon:
+    # Requires Sysmon to be installed on the host.
+    enabled: true
+
+  network:
+    enabled: true
+    # Interval between TCP/UDP connection snapshots.
+    poll_interval: 30s
+
+  process:
+    # ETW-based real-time process create/terminate events.
+    enabled: true
+
+  registry:
+    enabled: true
+    keys:
+      - HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+      - HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
+      - HKLM\SYSTEM\CurrentControlSet\Services
+      - HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+
+forwarder:
+  # Backend ingest API endpoint.
+  backend_url: "https://siem.example.internal:8443"
+
+  # Number of events per HTTP POST.
+  batch_size: 200
+
+  # How often to flush the queue even if batch_size not reached.
+  flush_interval: 5s
+
+  # mTLS — comment out to use API key auth instead.
+  cert_file: "certs/agent.crt"
+  key_file:  "certs/agent.key"
+  ca_file:   "certs/ca.crt"
+
+  # API key fallback (used when cert/key are not set).
+  # api_key: "your-secret-key-here"
+
+queue:
+  # Path to the local SQLite buffer database.
+  db_path: "C:\\ProgramData\\OpenSIEM\\queue.db"
+  # Maximum number of events to buffer before evicting oldest.
+  max_rows: 100000
+
+log:
+  level: "info"   # debug | info | warn | error
+  format: "json"  # json | text
