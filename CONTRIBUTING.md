@@ -1,4 +1,4 @@
-# Contributing to OpenSIEM Agent
+# Contributing to ObsidianWatch Agent
 
 Thank you for your interest in contributing. This document covers how to set up a development environment, the project conventions, and how to submit a change.
 
@@ -87,7 +87,7 @@ Then add classification logic in `internal/parser/normalizer.go`:
   - `Info` — collector start/stop, service lifecycle
   - `Warn` — recoverable errors (channel full, single event parse failure)
   - `Error` — fatal collector failures that cause `Run()` to return
-- Group imports: stdlib → external packages → internal (`opensiem/agent/...`).
+- Group imports: stdlib → external packages → internal (`obsidianwatch/agent/...`).
 - Do not use `panic` in collectors — return errors or log and continue.
 
 ---

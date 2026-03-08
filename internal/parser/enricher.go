@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // HostInfo captures static host metadata resolved once at startup.

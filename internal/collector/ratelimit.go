@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // RateLimitConfig sets limits per event source.

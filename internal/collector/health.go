@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // HealthStats are updated atomically by other collectors and the forwarder.

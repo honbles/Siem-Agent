@@ -15,7 +15,7 @@ import (
 	"log/slog"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 const sysmonChannel = "Microsoft-Windows-Sysmon/Operational"

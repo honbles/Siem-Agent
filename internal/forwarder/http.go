@@ -15,7 +15,7 @@ import (
 	"os"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // HTTPForwarder reads from the Queue and delivers batches to the backend.
@@ -133,7 +133,7 @@ func (f *HTTPForwarder) send(ctx context.Context, batch schema.Batch) error {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "opensiem-agent/"+f.ver)
+	req.Header.Set("User-Agent", "obsidianwatch-agent/"+f.ver)
 	if f.cfg.APIKey != "" {
 		req.Header.Set("X-API-Key", f.cfg.APIKey)
 	}

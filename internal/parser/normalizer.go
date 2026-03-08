@@ -9,7 +9,7 @@ import (
 	"log/slog"
 	"strings"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // Normalizer applies normalization rules to raw schema.Events.

@@ -19,7 +19,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // ETW provider GUIDs
@@ -251,7 +251,7 @@ func (p *ProcessCollector) Run(ctx context.Context) error {
 }
 
 func (p *ProcessCollector) startETW() error {
-	sessionName := "opensiem-process-session"
+	sessionName := "obsidianwatch-process-session"
 	sessionNamePtr, _ := windows.UTF16PtrFromString(sessionName)
 
 	// Allocate properties struct + extra space for session name string
@@ -318,7 +318,7 @@ func (p *ProcessCollector) stopETW() {
 		p.traceHandle = 0
 	}
 	if p.sessionHandle != 0 {
-		sessionNamePtr, _ := windows.UTF16PtrFromString("opensiem-process-session")
+		sessionNamePtr, _ := windows.UTF16PtrFromString("obsidianwatch-process-session")
 		bufSize := uint32(unsafe.Sizeof(eventTraceProperties{}) + 256)
 		buf := make([]byte, bufSize)
 		props := (*eventTraceProperties)(unsafe.Pointer(&buf[0]))

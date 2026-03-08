@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // AppLogConfig is the per-file configuration block.
@@ -56,7 +56,7 @@ type AppLogCollector struct {
 
 // NewAppLogCollector creates the collector.
 // stateDir is a writable directory where per-file offset state is stored
-// (e.g. C:\ProgramData\OpenSIEM\applog_state).
+// (e.g. C:\ProgramData\ObsidianWatch\applog_state).
 func NewAppLogCollector(
 	files []AppLogConfig,
 	stateDir, agentID, host string,

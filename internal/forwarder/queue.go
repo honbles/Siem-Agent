@@ -25,7 +25,7 @@ import (
 	"strings"
 	"sync"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 const (

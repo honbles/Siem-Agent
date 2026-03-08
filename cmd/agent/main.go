@@ -1,4 +1,4 @@
-// opensiem-agent — Windows security event collection agent.
+// obsidianwatch-agent — Windows security event collection agent.
 //
 // Usage:
 //   agent.exe -config agent.yaml          # run interactively
@@ -26,18 +26,18 @@ import (
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/mgr"
 
-	"opensiem/agent/internal/collector"
-	"opensiem/agent/internal/config"
-	"opensiem/agent/internal/forwarder"
-	"opensiem/agent/internal/parser"
-	sysmonpkg "opensiem/agent/internal/sysmon"
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/internal/collector"
+	"obsidianwatch/agent/internal/config"
+	"obsidianwatch/agent/internal/forwarder"
+	"obsidianwatch/agent/internal/parser"
+	sysmonpkg "obsidianwatch/agent/internal/sysmon"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 const (
-	serviceName        = "OpenSIEMAgent"
-	serviceDisplayName = "OpenSIEM Security Agent"
-	serviceDescription = "Collects Windows security events and forwards them to the OpenSIEM backend."
+	serviceName        = "ObsidianWatchAgent"
+	serviceDisplayName = "ObsidianWatch Security Agent"
+	serviceDescription = "Collects Windows security events and forwards them to the ObsidianWatch backend."
 )
 
 func main() {
@@ -85,7 +85,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
-	logger.Info("opensiem-agent starting (interactive)", "version", cfg.Agent.Version)
+	logger.Info("obsidianwatch-agent starting (interactive)", "version", cfg.Agent.Version)
 	if err := run(ctx, cfg, logger); err != nil {
 		logger.Error("agent exited with error", "err", err)
 		os.Exit(1)
@@ -141,8 +141,8 @@ func run(ctx context.Context, cfg *config.Config, logger *slog.Logger) error {
 	// Ensure required directories exist before any subsystem tries to use them.
 	// This means the user never has to create folders manually.
 	dirsToCreate := []string{
-		`C:\Program Files\OpenSIEM\Agent\certs`,
-		`C:\ProgramData\OpenSIEM`,
+		`C:\Program Files\ObsidianWatch\Agent\certs`,
+		`C:\ProgramData\ObsidianWatch`,
 	}
 	if cfg.Queue.DBPath != "" {
 		dirsToCreate = append(dirsToCreate, filepath.Dir(cfg.Queue.DBPath))
@@ -569,7 +569,7 @@ func elevatedSysmonSetup(logger *slog.Logger) error {
 // ---------------------------------------------------------------------------
 
 // enableAuditPolicies ensures Windows is configured to emit the event IDs
-// that OpenSIEM relies on — specifically:
+// that ObsidianWatch relies on — specifically:
 //   - Event 4688 with command line (process creation with full cmdline)
 //   - PowerShell Script Block Logging (4104)
 //   - PowerShell Module Logging (4103)

@@ -18,7 +18,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 var (

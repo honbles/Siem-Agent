@@ -19,7 +19,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"opensiem/agent/pkg/schema"
+	"obsidianwatch/agent/pkg/schema"
 )
 
 // notifyFilter controls what changes trigger a notification.

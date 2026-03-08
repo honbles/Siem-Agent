@@ -98,10 +98,10 @@ forwarder:
   # cert_file: "certs/agent.crt"
   # key_file:  "certs/agent.key"
   ca_file:   "certs/ca.crt"
-  api_key: "12345"
+  api_key: "a3f8b2c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1"
 
 queue:
-  db_path: "C:\\ProgramData\\OpenSIEM\\queue"
+  db_path: "C:\\ProgramData\\ObsidianWatch\\queue"
   max_rows: 100000
 
 log:

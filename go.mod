@@ -1,4 +1,4 @@
-module opensiem/agent
+module obsidianwatch/agent
 
 go 1.25.7
 

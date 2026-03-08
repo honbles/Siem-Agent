@@ -174,7 +174,7 @@ func defaults() *Config {
 			FlushInterval: 5 * time.Second,
 		},
 		Queue: QueueConfig{
-			DBPath:  `C:\ProgramData\OpenSIEM\queue`,
+			DBPath:  `C:\ProgramData\ObsidianWatch\queue`,
 			MaxRows: 100_000,
 		},
 		Log: LogConfig{Level: "info", Format: "json"},

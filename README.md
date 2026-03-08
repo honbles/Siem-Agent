@@ -1,6 +1,6 @@
-# OpenSIEM Agent
+# ObsidianWatch Agent
 
-A lightweight, open-source Windows security event collection agent written in Go. Collects security telemetry from Windows hosts and forwards it to the OpenSIEM backend for centralized storage and analysis.
+A lightweight, open-source Windows security event collection agent written in Go. Collects security telemetry from Windows hosts and forwards it to the ObsidianWatch backend for centralized storage and analysis.
 
 **Version: v0.2.0** — agent fully operational with 10 active collectors.
 
@@ -27,7 +27,7 @@ A lightweight, open-source Windows security event collection agent written in Go
 
 ## Overview
 
-The OpenSIEM agent runs as a Windows Service on each host you want to monitor. It collects events from **ten independent sources**, normalises them into a common schema, rate-limits and deduplicates them, then forwards them over HTTPS to the backend ingest API in batches.
+The ObsidianWatch agent runs as a Windows Service on each host you want to monitor. It collects events from **ten independent sources**, normalises them into a common schema, rate-limits and deduplicates them, then forwards them over HTTPS to the backend ingest API in batches.
 
 **What the agent does:**
 
@@ -150,25 +150,25 @@ GOOS=windows GOARCH=amd64 go build \
 
 ```powershell
 # 1. Register the service
-.\agent.exe -config "C:\Program Files\OpenSIEM\Agent\agent.yaml" install
+.\agent.exe -config "C:\Program Files\ObsidianWatch\Agent\agent.yaml" install
 
 # 2. Start it
-Start-Service OpenSIEMAgent
+Start-Service ObsidianWatchAgent
 
 # 3. Verify
-Get-Service OpenSIEMAgent
+Get-Service ObsidianWatchAgent
 ```
 
 The service is registered with `StartAutomatic` — it starts on every boot.
 
 **Service management:**
 ```powershell
-Start-Service   OpenSIEMAgent
-Stop-Service    OpenSIEMAgent
-Restart-Service OpenSIEMAgent
+Start-Service   ObsidianWatchAgent
+Stop-Service    ObsidianWatchAgent
+Restart-Service ObsidianWatchAgent
 
 # View logs written by the service
-Get-EventLog -LogName Application -Source OpenSIEMAgent -Newest 50
+Get-EventLog -LogName Application -Source ObsidianWatchAgent -Newest 50
 
 # Remove the service
 .\agent.exe uninstall
@@ -337,7 +337,7 @@ forwarder:
 
 queue:
   # Directory for the offline event buffer.
-  db_path: "C:\\ProgramData\\OpenSIEM\\queue"
+  db_path: "C:\\ProgramData\\ObsidianWatch\\queue"
   # Max buffered events before oldest are evicted (ring buffer).
   max_rows: 100000
 
@@ -358,14 +358,14 @@ Both the agent and backend present certificates. The agent verifies it is talkin
 ```bash
 openssl genrsa -out ca.key 4096
 openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
-  -subj "/C=US/O=OpenSIEM/CN=OpenSIEM-CA"
+  -subj "/C=US/O=ObsidianWatch/CN=ObsidianWatch-CA"
 ```
 
 **Step 2 — Create the backend server certificate:**
 ```bash
 openssl genrsa -out server.key 2048
 openssl req -new -key server.key -out server.csr \
-  -subj "/C=US/O=OpenSIEM/CN=siem.yourcompany.com"
+  -subj "/C=US/O=ObsidianWatch/CN=siem.yourcompany.com"
 
 cat > server-ext.cnf << EOF
 [req]
@@ -386,14 +386,14 @@ openssl x509 -req -days 825 -in server.csr -CA ca.crt -CAkey ca.key \
 HOSTNAME="workstation-01"
 openssl genrsa -out ${HOSTNAME}.key 2048
 openssl req -new -key ${HOSTNAME}.key -out ${HOSTNAME}.csr \
-  -subj "/C=US/O=OpenSIEM/CN=${HOSTNAME}"
+  -subj "/C=US/O=ObsidianWatch/CN=${HOSTNAME}"
 openssl x509 -req -days 825 -in ${HOSTNAME}.csr \
   -CA ca.crt -CAkey ca.key -CAcreateserial -out ${HOSTNAME}.crt
 ```
 
 **Step 4 — Deploy to the Windows host:**
 
-Copy to `C:\Program Files\OpenSIEM\Agent\certs\`:
+Copy to `C:\Program Files\ObsidianWatch\Agent\certs\`:
 
 | File | What it is |
 |---|---|
@@ -435,9 +435,9 @@ Logs print to stdout. Set `log.level: debug` for per-event output. Press `Ctrl+C
 
 **As a Windows Service:**
 ```powershell
-.\agent.exe -config "C:\Program Files\OpenSIEM\Agent\agent.yaml" install
-Start-Service OpenSIEMAgent
-Get-Service   OpenSIEMAgent
+.\agent.exe -config "C:\Program Files\ObsidianWatch\Agent\agent.yaml" install
+Start-Service ObsidianWatchAgent
+Get-Service   ObsidianWatchAgent
 ```
 
 **Test backend connectivity:**
@@ -465,9 +465,9 @@ Events are written to JSONL segment files under `queue.db_path/segments/`. The f
 
 **Inspect the queue:**
 ```powershell
-Get-ChildItem "C:\ProgramData\OpenSIEM\queue\segments\"
+Get-ChildItem "C:\ProgramData\ObsidianWatch\queue\segments\"
 
-Get-Content "C:\ProgramData\OpenSIEM\queue\segments\0000000001.jsonl" |
+Get-Content "C:\ProgramData\ObsidianWatch\queue\segments\0000000001.jsonl" |
   ConvertFrom-Json | Select-Object time, event_type, host | Format-Table
 ```
 

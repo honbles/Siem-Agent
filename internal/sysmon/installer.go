@@ -43,7 +43,7 @@ const (
 	sysmonConfigName  = "sysmon-config.xml"
 )
 
-// Minimal Sysmon config — captures the events OpenSIEM needs
+// Minimal Sysmon config — captures the events ObsidianWatch needs
 // without generating noise from every routine system call.
 const sysmonConfig = `<Sysmon schemaversion="4.90">
   <HashAlgorithms>md5,sha256</HashAlgorithms>
@@ -236,7 +236,7 @@ func getSysmonBinary(logger *slog.Logger) (exePath string, tempDir string, err e
 	// Check if embedded binary is available
 	if data := getEmbeddedSysmon(); data != nil {
 		logger.Info("sysmon: using embedded binary")
-		dir, err := os.MkdirTemp("", "opensiem-sysmon-*")
+		dir, err := os.MkdirTemp("", "obsidianwatch-sysmon-*")
 		if err != nil {
 			return "", "", err
 		}
@@ -278,7 +278,7 @@ func downloadSysmon(logger *slog.Logger) (exePath string, tempDir string, err er
 		return "", "", fmt.Errorf("open zip: %w", err)
 	}
 
-	dir, err := os.MkdirTemp("", "opensiem-sysmon-*")
+	dir, err := os.MkdirTemp("", "obsidianwatch-sysmon-*")
 	if err != nil {
 		return "", "", err
 	}
