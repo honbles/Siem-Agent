@@ -161,8 +161,24 @@ func (q *Queue) Pop(n int) ([]schema.Event, error) {
 			}
 			os.Remove(path)
 		} else {
+			// On Windows, renaming over an open file handle is not permitted.
+			// Close the write handle before rewriting, then reopen after.
+			isWriteSeg := seq == q.writeSeq
+			if isWriteSeg && q.writeFile != nil {
+				q.writeFile.Close()
+				q.writeFile = nil
+			}
 			if err := writeLines(path, keep); err != nil {
 				q.logger.Warn("queue: rewrite segment failed", "err", err)
+			} else if isWriteSeg {
+				// Reopen so Push() can continue appending.
+				f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+				if err != nil {
+					q.logger.Warn("queue: reopen write segment failed", "err", err)
+				} else {
+					q.writeFile = f
+					q.writeCount = len(keep)
+				}
 			}
 			break
 		}
