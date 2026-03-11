@@ -98,7 +98,8 @@ forwarder:
   # mTLS - comment out to use API key auth
   # cert_file: "certs/agent.crt"
   # key_file:  "certs/agent.key"
-  ca_file:   "certs/ca.crt"
+  ca_file:   "certs/ca.crt"         # CA cert for backend :8443
+  # management_ca_file: "certs/mgmt-ca.crt" # CA cert for management HTTPS (leave empty to reuse ca_file)
   api_key: "changeme-generate-a-real-key-with-openssl-rand-hex-32"
 
   # Tamper Protection - required when installing as a Windows service.

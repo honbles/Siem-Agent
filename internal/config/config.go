@@ -103,8 +103,9 @@ type ForwarderConfig struct {
 	FlushInterval time.Duration `yaml:"flush_interval"`
 	CertFile      string        `yaml:"cert_file"`
 	KeyFile       string        `yaml:"key_file"`
-	CAFile        string        `yaml:"ca_file"`
-	APIKey        string        `yaml:"api_key"`
+	CAFile           string        `yaml:"ca_file"`           // CA cert for backend :8443
+	ManagementCAFile string        `yaml:"management_ca_file"` // CA cert for management :443 (if HTTPS; falls back to ca_file if empty)
+	APIKey           string        `yaml:"api_key"`
 }
 
 type QueueConfig struct {

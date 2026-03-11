@@ -373,6 +373,18 @@ func run(ctx context.Context, cfg *config.Config, cfgPath string, logger *slog.L
 		startCollector("health", c.Run)
 	}
 
+	// ── Live Response ────────────────────────────────────────────────────
+	{
+		c := collector.NewLiveResponseCollector(
+			agentID, hostInfo.Hostname,
+			cfg.Forwarder.ManagementURL, cfg.Forwarder.APIKey,
+			resolveRelative(cfg.Forwarder.CAFile),
+			resolveRelative(cfg.Forwarder.ManagementCAFile),
+			logger,
+		)
+		startCollector("live-response", c.Run)
+	}
+
 	// ── Location collector ───────────────────────────────────────────────
 	// Uses Windows Location API (GPS → WiFi → IP fallback), posts to backend.
 	{
