@@ -373,6 +373,21 @@ func run(ctx context.Context, cfg *config.Config, cfgPath string, logger *slog.L
 		startCollector("health", c.Run)
 	}
 
+	// ── Location collector ───────────────────────────────────────────────
+	// Uses Windows Location API (GPS → WiFi → IP fallback), posts to backend.
+	{
+		c := collector.NewLocationCollector(
+			30*time.Minute,
+			agentID, hostInfo.Hostname,
+			cfg.Forwarder.BackendURL, cfg.Forwarder.APIKey,
+			resolveRelative(cfg.Forwarder.CAFile),
+			eventCh, // bypasses rate limiter — location is low frequency
+			logger,
+		)
+		startCollector("location", c.Run)
+		activeCollectors = append(activeCollectors, "location")
+	}
+
 	// Start the HTTP forwarder (reads from queue, not eventCh).
 	go func() { errCh <- fwd.Run(ctx) }()
 

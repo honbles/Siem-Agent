@@ -19,6 +19,7 @@ const (
 	EventTypeDNS      EventType = "dns"
 	EventTypeHealth   EventType = "health"
 	EventTypeAppLog   EventType = "applog"
+	EventTypeLocation EventType = "location"
 )
 
 // Severity maps to a 1–5 scale (1=info, 5=critical)
